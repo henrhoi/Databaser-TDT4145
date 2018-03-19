@@ -1,5 +1,7 @@
+import java.sql.Connection;
+import java.sql.SQLException;
 
-public class Main {
+public class Main extends DBConn{
 	
 	
 	public void init() {
@@ -11,9 +13,11 @@ public class Main {
 	}
 	
 	
-	public static void main(String[] args) {
-		Main main = new Main();
-		main.init();
-		main.run();
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		Connection conn = new Main().connect();
+		System.out.println("Testing");
+		AdminController.insertExerciseGroup(conn, "TESTGRUPPE");
+		
+
 	}
 }

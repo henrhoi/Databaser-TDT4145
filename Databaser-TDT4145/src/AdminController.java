@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminController extends DBConnection{
+public class AdminController{
 	
 	
 	
@@ -30,7 +30,7 @@ public class AdminController extends DBConnection{
 	}
 	
 	public static void insertExerciseGroup(Connection myConn, String navn) throws SQLException {
-		String preQueryStatement = "INSERT INTO EXERCISEGROUP (NAVN) VALUES (?)";
+		String preQueryStatement = "INSERT INTO exercisegroup (NAVN) VALUES (?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
 		prepStat.execute();
