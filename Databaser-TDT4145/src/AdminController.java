@@ -167,7 +167,7 @@ public class AdminController{
 		List<ExerciseGroup> groups = new ArrayList<ExerciseGroup>();
 		
 		//Spørr om alle koblingene mellom en exercise og en gruppe
-		String stmt = "Select * from groupcontainsexercise";
+		String stmt = "Select * from groupcontainsexersice";
 		PreparedStatement prepStat = conn.prepareStatement(stmt);
 		ResultSet rs = prepStat.executeQuery();
 		
@@ -178,7 +178,7 @@ public class AdminController{
 				map.get(rs.getString("gruppenavn"));
 			}
 			else {
-				map.put(rs.getString("gruppenavn"), new ArrayList<String>(Arrays.asList(rs.getString("exercisename"))));
+				map.put(rs.getString("gruppenavn"), new ArrayList<String>(Arrays.asList(rs.getString("exersicename"))));
 			}
 		}
 		
@@ -187,18 +187,19 @@ public class AdminController{
 			List<Exercise> exercises = new ArrayList<Exercise>();
 			for(String exercisename : map.get(gruppenavn)) {
 				//Hen exercise beskrivelse
-				String tmpStmt = "Select * from Exercise where navn = ?";
+				String tmpStmt = "Select * from exercise where navn = ?";
 				PreparedStatement pr = conn.prepareStatement(tmpStmt);
 				pr.setString(1, exercisename);
 				ResultSet tmpRes = pr.executeQuery();
-				Exercise e = new Exercise(exercisename,tmpRes.getString("beskrivelse"));
-				exercises.add(e);
+				if(tmpRes.next()) {
+					Exercise e = new Exercise(exercisename,tmpRes.getString("beskrivelse"));
+					exercises.add(e);
+				}
+				
 			}
 			groups.add(new ExerciseGroup(gruppenavn,exercises));
 		}
-		
 		return groups;
-	
 	}
 	
 	

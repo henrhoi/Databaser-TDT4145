@@ -12,4 +12,8 @@ public class ExerciseGroup {
 		this.name = name;
 		this.exercises = new ArrayList<Exercise>(exercises);
 	}
+	
+	public List<Exercise> getExercises() {
+		return exercises;
+	}
 }
