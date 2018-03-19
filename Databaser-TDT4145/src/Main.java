@@ -23,6 +23,6 @@ public class Main extends DBConn{
 		System.out.println(dateStart.getYear());
 		
 		
-		System.out.println(AdminController.getExerciseResult(myConn, dateStart, dateEnd));
+		System.out.println(AdminController.getExerciseResult(myConn, dateStart,dateEnd));
 	}
 }
