@@ -136,6 +136,7 @@ public class AdminController{
 	///////////////////////////Kravspesifikasjon 3///////////////////////////
 	
 	public static String getExerciseResult(Connection myConn, Date dateStart,Date dateEnd) throws SQLException{
+		//TODO - BETWEEN FUNKER IKKE HER MED DATOENE...
         String query = "SELECT PERSONLIGFORM, VARIGHET FROM workout WHERE DATO BETWEEN ? AND ?";
         PreparedStatement preparedStatement = myConn.prepareStatement(query);
         preparedStatement.setDate(1, dateStart);
@@ -145,7 +146,7 @@ public class AdminController{
         int antallTimer = 0;
         int antallPersonligeForm = 0;
         while (resultSet.next()) {
-            
+            System.out.println("INNNE I LOOPEN");
             index++;
             antallTimer += resultSet.getInt("VARIGHET");
             antallPersonligeForm += resultSet.getInt("PERSONLIGFORM");
