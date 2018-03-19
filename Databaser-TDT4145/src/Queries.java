@@ -1,24 +1,33 @@
-import java.net.ConnectException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-public class AdminController extends DBConnection{
+package Queries;
+
+import java.sql.*;
+import java.time.*;
+
+public class Queries {
+	
+	//DBManager som skrives inn i main eller controller? Litt usikker på akkurat hvordan den skal skrives, men ish noe sånn her:
+	
+	//String url = "url til databasen...";
+	//String usr = "root";
+	//int usrID = 1;
+	//String query = "Insert into something something";
+	//Class.forName("hvor db-serveren ligger; typisk com.mysql.jdbc.driver)";
+	//Connection myConn = DriverManager.getConnection(url, usr, password);
+	//PreparedStatement prepStat = myConn.prepareStatement(query);
+	//prepStat.setInt(1, userID);
+	//prepStat.setString(2, something);
+	//int count = prepStat.executeUpdate();
+	//close prepStat og myConn
 	
 	
+	//kravspesifikasjon 1: 
 	
-	//Lage nytt apparat objekt, skrive til database
-	public void makeMachine() {
-		
-	}
-	
-	
-	public static void insertToWorkout(Connection myConn, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
+	public static void insertToTreningOkt(Connection myConn, int oktID, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
 		String preQueryStatement = "INSERT INTO WORKOUT (OKTID, DATO, TIDSPUNKT, VARIGHET, PERSONLIGFORM, PRESTASJON, NOTAT) VALUES (?,?,?,?,?,?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		
-		prepStat.setInt(1, 69); //Rullerende id?
+		prepStat.setInt(1, oktID);
 		prepStat.setString(2,date);
 		prepStat.setString(3, time);
 		prepStat.setInt(4, duration);
@@ -29,28 +38,26 @@ public class AdminController extends DBConnection{
 		
 	}
 	
-	//
-	public static void insertToMachineExercise(Connection myConn, String navn, String beskrivelse, int sets, int kg) throws SQLException{
-		//Skal legge inn øvelsen i Superklassen Exercise
+	public static void insertToOvelseApparat(Connection myConn, String navn, String beskrivelse, int sets, int reps, int kg, String apparatNavn) throws SQLException{
 		String preQueryStatement = "INSERT INTO EXERCISE (NAVN, BESKRIVELSE) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
 		prepStat.setString(2, beskrivelse);
 		
-		prepStat.execute();
+		String preQueryStatementApparat = "INSERT INTO MACHINEEXERCISE (NAVN, KG, ANTALLSETT, ANTREPS, APPARATNAVN) VALUES (?,?,?,?,?)"; //LAGE EGEN TABELL STYRKE ELLER HOLDE MACHINE/NOT MACHINE?
 		
-		//Skal legge til øvelsen i Subklassen machineExercise
-		String preQueryStatementApparat = "INSERT INTO MACHINEEXERCISE (KG, ANTALLSETT, EXERCISENAVN) VALUES (?,?,?)"; //LAGE EGEN TABELL STYRKE ELLER HOLDE MACHINE/NOT MACHINE?
 		PreparedStatement prepStatStyrke = myConn.prepareStatement(preQueryStatementApparat);
-		prepStatStyrke.setInt(1, kg);
-		prepStatStyrke.setInt(2, sets);
-		prepStatStyrke.setString(3, navn);
+		prepStatStyrke.setString(1, navn);
+		prepStatStyrke.setInt(2, kg);
+		prepStatStyrke.setInt(3, sets);
+		prepStatStyrke.setInt(4, reps);
+		prepStatStyrke.setString(5, apparatNavn);
 		
 		prepStatStyrke.execute();
 	}
 	
-	
-	public static void insertToNotMachineExercise(Connection myConn, String navn, String beskrivelse) throws SQLException{
+	//insert i ikke-machine øvelse
+	public static void insertToOvelseIkkeApparat(Connection myConn, String navn, String beskrivelse) throws SQLException{
 		String preQueryStatement = "INSERT INTO EXERCISE (NAVN, BESKRIVELSE) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
@@ -93,8 +100,8 @@ public class AdminController extends DBConnection{
 	//kravspesifikasjon 2
 	
 	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
-	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
-		ArrayList<Exercise> ovelseList = new ArrayList<>();
+	public static ArrayList<Ovelse> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
+		ArrayList<Ovelse> ovelseList = new ArrayList<>();
 		String query = "SELECT * FROM EXERCISE INNER JOIN EXERCISEGROUP EXERCISE.NAVN = EXERCISEGROUP.NAVN WHERE OKTID = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
 		PreparedStatement preparedStatement = myConn.prepareStatment(query);
 		preparedStatement.setInt(1, oktID);
@@ -104,7 +111,10 @@ public class AdminController extends DBConnection{
 			String name = resultSet.getString("NAVN");
 			String description = resultSet.getString("BESKRIVELSE");
 			
-			Exercise ovelse = new Exercise(name,description); //hvordan fikser jeg dette datagutter?
+			Ovelse ovelse = new Ovelse(); //hvordan fikser jeg dette datagutter?
+			ovelse.setNavn(name);
+			ovelse.setBeskrivelse(description);
+			
 			ovelseList.add(ovelse);
 		}
 		return ovelseList;
@@ -127,4 +137,10 @@ public class AdminController extends DBConnection{
 		}
 		return report;
 	}
+	
+	
+	
+	
+	
+
 }
