@@ -22,7 +22,6 @@ public class Main extends DBConn{
 		Date dateEnd = new Date(2019,4,4);
 		System.out.println(dateStart.getYear());
 		
-		
 		System.out.println(AdminController.getExerciseResult(myConn, dateStart,dateEnd));
 	}
 }

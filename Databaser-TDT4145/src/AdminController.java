@@ -137,10 +137,12 @@ public class AdminController{
 	
 	public static String getExerciseResult(Connection myConn, Date dateStart,Date dateEnd) throws SQLException{
 		//TODO - BETWEEN FUNKER IKKE HER MED DATOENE...
+		String min = "'" + dateStart.getYear() + "-" + (dateStart.getMonth()+1) + "-" + dateStart.getDate() + "'";
+		String max = "'" + dateEnd.getYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate() + "'";
         String query = "SELECT PERSONLIGFORM, VARIGHET FROM workout WHERE DATO BETWEEN ? AND ?";
         PreparedStatement preparedStatement = myConn.prepareStatement(query);
-        preparedStatement.setDate(1, dateStart);
-        preparedStatement.setDate(2, dateEnd);
+        preparedStatement.setString(1, min);
+        preparedStatement.setString(2, max);
         ResultSet resultSet = preparedStatement.executeQuery();
         int index =1;
         int antallTimer = 0;
