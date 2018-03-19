@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminController{
 	
@@ -115,6 +118,7 @@ public class AdminController{
 				//Hen exercise beskrivelse
 				String tmpStmt = "Select * from Exercise where navn = ?";
 				PreparedStatement pr = conn.prepareStatement(tmpStmt);
+				pr.setString(1, rs.getString("exersicename"));
 				ResultSet tmpRes = pr.executeQuery();
 				e.setDescription(tmpRes.getString("beskrivelse"));
 				
@@ -128,42 +132,46 @@ public class AdminController{
 		return workouts;
 	}
 	
-	
-//	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
-//	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
-//		ArrayList<Exercise> ovelseList = new ArrayList<>();
-//		String query = "SELECT * FROM EXERCISE INNER JOIN EXERCISEGROUP EXERCISE.NAVN = EXERCISEGROUP.NAVN WHERE OKTID = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-//		PreparedStatement preparedStatement = myConn.prepareStatment(query);
-//		preparedStatement.setInt(1, oktID);
-//		ResultSet resultSet = preparedStatement.executeQuery();
-//		
-//		while (resultSet.next()) {
-//			String name = resultSet.getString("NAVN");
-//			String description = resultSet.getString("BESKRIVELSE");
-//			
-//			Exercise ovelse = new Exercise(name,description); //hvordan fikser jeg dette datagutter?
-//			ovelseList.add(ovelse);
-//		}
-//		return ovelseList;
-//	}
+	///////////////////////////Kravspesifikasjon 4///////////////////////////
 	
 	
-	
-	public static String getResultOvelseMachine(Connection myConn, int ID) throws SQLException{
-		String query = "SELECT * FROM MACHINE INNER JOIN ON OVELSE.NAVN = REULTATSTYRKE.NAVN";
-		PreparedStatement preparedStatement = myConn.prepareStatement(query);
-		preparedStatement.setInt(1, ID);
-		ResultSet resultSet = preparedStatement.executeQuery();
+	public static List<ExerciseGroup> getExerciseGroups(Connection conn) throws SQLException{
+		List<ExerciseGroup> groups = new ArrayList<ExerciseGroup>();
 		
-		String report = "";
+		//Spørr om alle koblingene mellom en exercise og en gruppe
+		String stmt = "Select * from groupcontainsexercise";
+		PreparedStatement prepStat = conn.prepareStatement(stmt);
+		ResultSet rs = prepStat.executeQuery();
 		
-		while (resultSet.next()) {
-			String navn = resultSet.getString("NAVN");
-			String antReps = resultSet.getString("ANTALLREPS");
-			String antSet = resultSet.getString("ANTALLSET");
-			String kg = String.valueOf(resultSet.getInt("KG"));
-			report = navn + antReps + antSet + kg; 
+		//Lag en map hvor gruppenavn er key og ArrayList med exercisenavn er value
+		Map<String,ArrayList<String>> map = new HashMap<String,ArrayList<String>>();
+		while(rs.next()) {
+			if(map.containsKey(rs.getString("gruppenavn"))) {
+				map.get(rs.getString("gruppenavn"));
+			}
+			else {
+				map.put(rs.getString("gruppenavn"), new ArrayList<String>(Arrays.asList(rs.getString("exercisename"))));
+			}
 		}
-		return report;
+		
+		//Lag objekter ut av mappen
+		for(String gruppenavn : map.keySet()) {
+			List<Exercise> exercises = new ArrayList<Exercise>();
+			for(String exercisename : map.get(gruppenavn)) {
+				//Hen exercise beskrivelse
+				String tmpStmt = "Select * from Exercise where navn = ?";
+				PreparedStatement pr = conn.prepareStatement(tmpStmt);
+				pr.setString(1, exercisename);
+				ResultSet tmpRes = pr.executeQuery();
+				Exercise e = new Exercise(exercisename,tmpRes.getString("beskrivelse"));
+				exercises.add(e);
+			}
+			groups.add(new ExerciseGroup(gruppenavn,exercises));
+		}
+		
+		return groups;
+	
 	}
+	
+
 }
