@@ -1,4 +1,3 @@
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -202,5 +201,18 @@ public class AdminController{
 	
 	}
 	
-
+	
+	///////////////////////////Kravspesifikasjon 5///////////////////////////
+	
+	
+	//Skal hente ut hvor mange treningsøkter en har hatt totalt
+	public static int getTotalWorkouts(Connection conn) throws SQLException {
+		String stmt  = "select count(dato) as total from workout";
+		PreparedStatement pr = conn.prepareStatement(stmt);
+		ResultSet rs = pr.executeQuery();
+		return rs.next() ? rs.getInt("total") : 0;
+	}
+	
+	
+	
 }

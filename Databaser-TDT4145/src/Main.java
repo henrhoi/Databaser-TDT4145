@@ -16,7 +16,7 @@ public class Main extends DBConn{
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		Connection conn = new Main().connect();
 		System.out.println("Testing");
-		AdminController.insertExerciseGroup(conn, "TESTGRUPPE33");
+		System.out.println(AdminController.getTotalWorkouts(conn));
 		
 
 	}
