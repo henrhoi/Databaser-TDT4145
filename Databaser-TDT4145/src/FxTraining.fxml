@@ -19,7 +19,7 @@
       <TextField fx:id="registerExerciseGroupField" layoutX="300.0" layoutY="187.0" promptText="(navn)" />
       <TextField fx:id="registerExerciseInGroupButtonregisterExerciseInGroupField" layoutX="300.0" layoutY="235.0" promptText="(gruppe, øvelsenavn)" />
       <TextField fx:id="registerExerciseInWorkoutField" layoutX="300.0" layoutY="279.0" promptText="(dato, navn, kilo, sett)" />
-      <Button fx:id="registerExerciseOnMachineButton" layoutX="61.0" layoutY="326.0" mnemonicParsing="false" onAction="#registerExerciseonMachine" text="Register Exercise on Machine" />
+      <Button fx:id="registerExerciseOnMachineButton" layoutX="61.0" layoutY="326.0" mnemonicParsing="false" onAction="#registerExerciseOnMachine" text="Register Exercise on Machine" />
       <TextField fx:id="registerExerciseOnMachineField" layoutX="300.0" layoutY="326.0" />
    </children>
 </Pane>

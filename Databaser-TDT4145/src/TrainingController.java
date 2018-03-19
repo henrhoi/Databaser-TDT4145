@@ -1,5 +1,6 @@
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +35,11 @@ public class TrainingController extends Application{
 	public void registerWorkout() throws SQLException {
 		List<String> input = Arrays.asList(registerWorkoutField.getText().split(","));
 		Connection myConn = new Main().connect();
-
-		String date = input.get(0);
+		List<String> dateString = Arrays.asList(input.get(0).split("-"));
+		int year = Integer.parseInt(dateString.get(0));
+		int month = Integer.parseInt(dateString.get(1));
+		int day = Integer.parseInt(dateString.get(2));
+		Date date = new Date(year, month, day);
 		String time = input.get(1);
 		int duration = Integer.parseInt(input.get(2));
 		int personligForm = Integer.parseInt(input.get(3));
@@ -98,7 +102,11 @@ public class TrainingController extends Application{
 	public void registerExerciseInWorkout() throws SQLException {
 		List<String> input = Arrays.asList(registerExerciseInWorkoutField.getText().split(","));
 		Connection myConn = new Main().connect();
-		String workoutDate = input.get(0);
+		List<String> dateString = Arrays.asList(input.get(0).split("-"));
+		int year = Integer.parseInt(dateString.get(0));
+		int month = Integer.parseInt(dateString.get(1));
+		int day = Integer.parseInt(dateString.get(2));
+		Date workoutDate = new Date(year, month, day);
 		String exerciseName = input.get(1);
 		int antallKilo = Integer.parseInt(input.get(2));
 		int antallSet = Integer.parseInt(input.get(3));
