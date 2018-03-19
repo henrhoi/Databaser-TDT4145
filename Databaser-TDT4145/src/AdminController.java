@@ -128,9 +128,38 @@ public class AdminController{
 				//Legg til øvelse i workout
 				w.addExercise(e);
 			}
+			
 		}
 		return workouts;
 	}
+		
+	
+	///////////////////////////Kravspesifikasjon 3///////////////////////////
+	
+	public static String getExerciseResult(Connection myConn, String dateStart,String dateEnd) throws SQLException{
+        String query = "SELECT PERSONLIGFROM, VARIGHET FROM WORKOUT WHERE DATO > ? AND DATO < ?";
+        PreparedStatement preparedStatement = myConn.prepareStatement(query);
+        preparedStatement.setString(1, dateStart);
+        preparedStatement.setString(2, dateEnd);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int index =0;
+        int antallTimer = 0;
+        int antallPersonligeForm = 0;
+        while (resultSet.next()) {
+            
+            index++;
+            antallTimer += resultSet.getInt("VARIGHET");
+            antallPersonligeForm += resultSet.getInt("PERSONLIGFORM");
+            
+        }
+        int personligFormSnitt = antallPersonligeForm/index;
+        int varighetSnitt = antallTimer/index;
+        
+        String report = "I løpet av perioden på "+ index + "dager, trente du "+ antallTimer + "."+ " Gjennomsnittsøkten var på " +varighetSnitt +" timer, med et gjennomsnittlig perosnlig form på "+personligFormSnitt +".";
+
+        return report;
+    }
+	
 	
 	///////////////////////////Kravspesifikasjon 4///////////////////////////
 	
