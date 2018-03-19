@@ -15,9 +15,13 @@ public class Workout {
 	
 	private List<Exercise> exerciseList;
 	
-	public Workout() {
+	public Workout(Date dato, Time tidspunkt, Time varighet, int personligForm, int prestasjon, String notat){
+		
+		
 		
 	}
+		
+	
 	
 	
 

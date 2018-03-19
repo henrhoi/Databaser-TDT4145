@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public final class DBConnection {
+public class DBConnection {
 	
 	
 	// Statisk funksjon som kan brukes for aa koble seg opp mot databasen. 
