@@ -14,7 +14,7 @@ public class AdminController extends DBConnection{
 	}
 	
 	
-	public static void insertToWorkout(Connection myConn, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
+	public static void insertWorkout(Connection myConn, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
 		String preQueryStatement = "INSERT INTO WORKOUT (OKTID, DATO, TIDSPUNKT, VARIGHET, PERSONLIGFORM, PRESTASJON, NOTAT) VALUES (?,?,?,?,?,?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		
@@ -29,40 +29,61 @@ public class AdminController extends DBConnection{
 		
 	}
 	
-	//
-	public static void insertToMachineExercise(Connection myConn, String navn, String beskrivelse, int sets, int kg) throws SQLException{
-		//Skal legge inn øvelsen i Superklassen Exercise
-		String preQueryStatement = "INSERT INTO EXERCISE (NAVN, BESKRIVELSE) VALUES (?,?)";
+	public static void insertExerciseGroup(Connection myConn, String navn) throws SQLException {
+		String preQueryStatement = "INSERT INTO EXERCISEGROUP (NAVN) VALUES (?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
-		prepStat.setString(2, beskrivelse);
-		
 		prepStat.execute();
-		
-		//Skal legge til øvelsen i Subklassen machineExercise
-		String preQueryStatementApparat = "INSERT INTO MACHINEEXERCISE (KG, ANTALLSETT, EXERCISENAVN) VALUES (?,?,?)"; //LAGE EGEN TABELL STYRKE ELLER HOLDE MACHINE/NOT MACHINE?
-		PreparedStatement prepStatStyrke = myConn.prepareStatement(preQueryStatementApparat);
-		prepStatStyrke.setInt(1, kg);
-		prepStatStyrke.setInt(2, sets);
-		prepStatStyrke.setString(3, navn);
-		
-		prepStatStyrke.execute();
 	}
 	
 	
-	public static void insertToNotMachineExercise(Connection myConn, String navn, String beskrivelse) throws SQLException{
+	public static void insertExercise(Connection myConn, String navn, String beskrivelse) throws SQLException {
 		String preQueryStatement = "INSERT INTO EXERCISE (NAVN, BESKRIVELSE) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
 		prepStat.setString(2, beskrivelse);
 		prepStat.execute();
-		
-		String preQueryStatementIkkeApparat = "INSERT INTO IKKEAPPARAT (NAVN, BESKRIVELSE) VALUES (?,?)";
-		PreparedStatement prepStatIkkeApparat = myConn.prepareStatement(preQueryStatementIkkeApparat);
-		prepStatIkkeApparat.setString(1,navn);
-		prepStatIkkeApparat.setString(2, beskrivelse);
-		prepStatIkkeApparat.execute();
 	}
+	
+	public static void insertMachine(Connection myConn, String navn, String beskrivelse) throws SQLException{
+		String preQueryStatement = "INSERT INTO MACHINE (NAVN, BESKRIVELSE) VALUES (?,?)";
+		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
+		prepStat.setString(1, navn);
+		prepStat.setString(2, beskrivelse);
+		prepStat.execute();
+	}
+	
+	public static void insertExerciseOnMachine(Connection myConn,String exerciseName,String machineName) throws SQLException{
+		//Begge er fremmednøkkler til sin entitet
+		String preQueryStatement = "INSERT INTO EXERCISEONMACHINE (EXERCISENAME, MACHINENAME) VALUES (?,?)";
+		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
+		prepStat.setString(1, exerciseName);
+		prepStat.setString(2, machineName);
+		prepStat.execute();
+	}
+	
+	public static void insertGroupContainsExercise(Connection myConn,String groupName,String exerciseName) throws SQLException{
+		//Begge er fremmednøkkler til sin entitet
+		String preQueryStatement = "INSERT INTO GROPUCONTAINSEXERCISE (GROUPNAME, EXERCISENAME) VALUES (?,?)";
+		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
+		prepStat.setString(1, groupName);
+		prepStat.setString(2, exerciseName);
+		prepStat.execute();
+	}
+	
+	public static void insertWorkoutContainsExercise(Connection myConn,String workoutDate,String exerciseName) throws SQLException{
+		//Begge er fremmednøkkler til sin entitet
+		String preQueryStatement = "INSERT INTO WORKOUTCONTAINSEXERCISE (WORKOUTDATE, EXERCISENAME) VALUES (?,?)";
+		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
+		prepStat.setString(1, workoutDate);
+		prepStat.setString(2, exerciseName);
+		prepStat.execute();
+	}
+	
+	
+	
+	
+
 	
 	//delete machine-øvelse
 	public static void deleteOvelseMachine(Connection myConn, String name) throws SQLException{
@@ -92,23 +113,23 @@ public class AdminController extends DBConnection{
 	
 	//kravspesifikasjon 2
 	
-	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
-	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
-		ArrayList<Exercise> ovelseList = new ArrayList<>();
-		String query = "SELECT * FROM EXERCISE INNER JOIN EXERCISEGROUP EXERCISE.NAVN = EXERCISEGROUP.NAVN WHERE OKTID = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-		PreparedStatement preparedStatement = myConn.prepareStatment(query);
-		preparedStatement.setInt(1, oktID);
-		ResultSet resultSet = preparedStatement.executeQuery();
-		
-		while (resultSet.next()) {
-			String name = resultSet.getString("NAVN");
-			String description = resultSet.getString("BESKRIVELSE");
-			
-			Exercise ovelse = new Exercise(name,description); //hvordan fikser jeg dette datagutter?
-			ovelseList.add(ovelse);
-		}
-		return ovelseList;
-	}
+//	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
+//	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
+//		ArrayList<Exercise> ovelseList = new ArrayList<>();
+//		String query = "SELECT * FROM EXERCISE INNER JOIN EXERCISEGROUP EXERCISE.NAVN = EXERCISEGROUP.NAVN WHERE OKTID = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
+//		PreparedStatement preparedStatement = myConn.prepareStatment(query);
+//		preparedStatement.setInt(1, oktID);
+//		ResultSet resultSet = preparedStatement.executeQuery();
+//		
+//		while (resultSet.next()) {
+//			String name = resultSet.getString("NAVN");
+//			String description = resultSet.getString("BESKRIVELSE");
+//			
+//			Exercise ovelse = new Exercise(name,description); //hvordan fikser jeg dette datagutter?
+//			ovelseList.add(ovelse);
+//		}
+//		return ovelseList;
+//	}
 	
 	public static String getResultOvelseMachine(Connection myConn, int ID) throws SQLException{
 		String query = "SELECT * FROM MACHINE INNER JOIN ON OVELSE.NAVN = REULTATSTYRKE.NAVN";
