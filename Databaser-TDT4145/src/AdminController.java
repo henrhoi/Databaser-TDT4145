@@ -1,8 +1,11 @@
 import java.net.ConnectException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminController extends DBConnection{
 	
@@ -84,6 +87,48 @@ public class AdminController extends DBConnection{
 	
 ///////////////////////////Kravspesifikasjon 2///////////////////////////
 	
+	
+	
+	//Hente de n siste Workout med all informasjon
+	public static List<Workout> getNWorkouts(Connection conn, int n) throws SQLException{
+		List<Workout> workouts = new ArrayList<Workout>();
+		
+		//First find a list over the N last workouts
+		String stmt = "select * from Workout order by dato desc limit ?";
+		PreparedStatement prepStat = conn.prepareStatement(stmt);
+		prepStat.setInt(1, n);
+		ResultSet rs = prepStat.executeQuery();
+		while(rs.next()) {
+			Workout w = new Workout(rs.getDate("dato"), rs.getTime("tidspunkt"), rs.getTime("varighet"), rs.getInt("personligForm"), rs.getInt("prestasjon"), rs.getString("notat"));
+			workouts.add(w);
+		}
+		
+		//Then for every workout get all the exercises
+		for (Workout w : workouts) {
+			Date id = w.getDato();
+			stmt = "select * from workoutcontainsexercise where dato = ?";
+			prepStat = conn.prepareStatement(stmt);
+			prepStat.setDate(1, id);
+			while(rs.next()) {
+				Exercise e = new Exercise(rs.getString("exersicename"),rs.getInt("kilo"),rs.getInt("sett"));
+				
+				//Hen exercise beskrivelse
+				String tmpStmt = "Select * from Exercise where navn = ?";
+				PreparedStatement pr = conn.prepareStatement(tmpStmt);
+				ResultSet tmpRes = pr.executeQuery();
+				e.setDescription(tmpRes.getString("beskrivelse"));
+				
+				//Hvis øvelsen gjøres på en maskin, hent apparatinfo
+				//hmm
+				
+				//Legg til øvelse i workout
+				w.addExercise(e);
+			}
+		}
+		return workouts;
+	}
+	
+	
 //	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
 //	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
 //		ArrayList<Exercise> ovelseList = new ArrayList<>();
@@ -101,6 +146,8 @@ public class AdminController extends DBConnection{
 //		}
 //		return ovelseList;
 //	}
+	
+	
 	
 	public static String getResultOvelseMachine(Connection myConn, int ID) throws SQLException{
 		String query = "SELECT * FROM MACHINE INNER JOIN ON OVELSE.NAVN = REULTATSTYRKE.NAVN";
