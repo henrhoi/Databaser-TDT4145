@@ -8,11 +8,8 @@ public class AdminController extends DBConnection{
 	
 	
 	
-	//Lage nytt apparat objekt, skrive til database
-	public void makeMachine() {
-		
-	}
 	
+	///////////////////////////Kravspesifikasjon 1///////////////////////////
 	
 	public static void insertWorkout(Connection myConn, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
 		String preQueryStatement = "INSERT INTO WORKOUT (OKTID, DATO, TIDSPUNKT, VARIGHET, PERSONLIGFORM, PRESTASJON, NOTAT) VALUES (?,?,?,?,?,?,?)";
@@ -71,47 +68,21 @@ public class AdminController extends DBConnection{
 		prepStat.execute();
 	}
 	
-	public static void insertWorkoutContainsExercise(Connection myConn,String workoutDate,String exerciseName) throws SQLException{
+	public static void insertWorkoutContainsExercise(Connection myConn,String workoutDate,String exerciseName,int antallKilo, int antallSet) throws SQLException{
 		//Begge er fremmednøkkler til sin entitet
-		String preQueryStatement = "INSERT INTO WORKOUTCONTAINSEXERCISE (WORKOUTDATE, EXERCISENAME) VALUES (?,?)";
+		String preQueryStatement = "INSERT INTO WORKOUTCONTAINSEXERCISE (WORKOUTDATE, EXERCISENAME, ANTALLKILO, ANTALLSET) VALUES (?,?,?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, workoutDate);
 		prepStat.setString(2, exerciseName);
+		prepStat.setInt(3, antallKilo); //Hvis disse verdiene ikke er relevante settes de til null
+		prepStat.setInt(4, antallSet); //Hvis disse verdiene ikke er relevante settes de til null -  feks på øvelser som ikke er på apparat
 		prepStat.execute();
 	}
 	
 	
 	
 	
-
-	
-	//delete machine-øvelse
-	public static void deleteOvelseMachine(Connection myConn, String name) throws SQLException{
-		String preQueryStatement = "DELETE FROM OVELSE where NAVN = ?"; //BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
-		prepStat.setString(1,name);
-		prepStat.execute();
-		
-		String preQueryStatementMachine = "DELETE FROM Machineexercise where NAVN = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-		PreparedStatement prepStatStyrke = myConn.prepareStatement(preQueryStatementMachine);
-		prepStatStyrke.setString(1,name);
-		prepStatStyrke.execute();
-	}
-	
-	//delete ikke-machine øvelse
-	public static void deleteOvelseIkkeMachine(Connection myConn, String name) throws SQLException{
-		String preQueryStat = "DELETE FROM OVELSE where NAVN = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-		PreparedStatement preStat = myConn.prepareStatement(preQueryStat);
-		preStat.setString(1,name);
-		preStat.execute();
-		
-		String preQueryNotMachine = "DELETE FROM NOTMACHINEEXERCISE where NAVN =?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-		PreparedStatement preStatNotMachine = myConn.prepareStatement(preQueryNotMachine);
-		preStatNotMachine.setString(1, name);
-		preStatNotMachine.execute();
-	}
-	
-	//kravspesifikasjon 2
+///////////////////////////Kravspesifikasjon 2///////////////////////////
 	
 //	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
 //	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
