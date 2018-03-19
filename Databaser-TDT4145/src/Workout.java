@@ -7,7 +7,7 @@ public class Workout {
 	
 	private Date dato;
 	private Time tidspunkt;
-	private Time varighet;
+	private int varighet;
 	private int personligForm;
 	private int prestasjon;
 	private String notat;
@@ -15,7 +15,7 @@ public class Workout {
 	
 	private List<Exercise> exerciseList;
 	
-	public Workout(Date dato, Time tidspunkt, Time varighet, int personligForm, int prestasjon, String notat){
+	public Workout(Date dato, Time tidspunkt, int varighet, int personligForm, int prestasjon, String notat){
 		this.dato = dato;
 		this.tidspunkt = tidspunkt;
 		this.varighet = varighet;

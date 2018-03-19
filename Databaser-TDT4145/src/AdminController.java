@@ -1,11 +1,14 @@
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminController{
 	
@@ -14,17 +17,16 @@ public class AdminController{
 	
 	///////////////////////////Kravspesifikasjon 1///////////////////////////
 	
-	public static void insertWorkout(Connection myConn, String date, String time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
-		String preQueryStatement = "INSERT INTO WORKOUT (OKTID, DATO, TIDSPUNKT, VARIGHET, PERSONLIGFORM, PRESTASJON, NOTAT) VALUES (?,?,?,?,?,?,?)";
+	public static void insertWorkout(Connection myConn, Date date, Time time, int duration, int personligForm, int prestasjon, String notat )throws SQLException{
+		String preQueryStatement = "INSERT INTO workout (DATO, TIDSPUNT, VARIGHET, PERSONLIGFORM, PRESTASJON, NOTAT) VALUES (?,?,?,?,?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		
-		prepStat.setInt(1, 69); //Rullerende id?
-		prepStat.setString(2,date);
-		prepStat.setString(3, time);
-		prepStat.setInt(4, duration);
-		prepStat.setInt(5, personligForm);
-		prepStat.setInt(6, prestasjon);
-		prepStat.setString(7, notat);
+		prepStat.setDate(1,date);
+		prepStat.setTime(2, time);
+		prepStat.setInt(3, duration);
+		prepStat.setInt(4, personligForm);
+		prepStat.setInt(5, prestasjon);
+		prepStat.setString(6, notat);
 		prepStat.execute();
 		
 	}
@@ -38,7 +40,7 @@ public class AdminController{
 	
 	
 	public static void insertExercise(Connection myConn, String navn, String beskrivelse) throws SQLException {
-		String preQueryStatement = "INSERT INTO EXERCISE (NAVN, BESKRIVELSE) VALUES (?,?)";
+		String preQueryStatement = "INSERT INTO exercise (NAVN, BESKRIVELSE) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
 		prepStat.setString(2, beskrivelse);
@@ -46,7 +48,7 @@ public class AdminController{
 	}
 	
 	public static void insertMachine(Connection myConn, String navn, String beskrivelse) throws SQLException{
-		String preQueryStatement = "INSERT INTO MACHINE (NAVN, BESKRIVELSE) VALUES (?,?)";
+		String preQueryStatement = "INSERT INTO machine (NAVN, BESKRIVELSE) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, navn);
 		prepStat.setString(2, beskrivelse);
@@ -55,7 +57,7 @@ public class AdminController{
 	
 	public static void insertExerciseOnMachine(Connection myConn,String exerciseName,String machineName) throws SQLException{
 		//Begge er fremmednøkkler til sin entitet
-		String preQueryStatement = "INSERT INTO EXERCISEONMACHINE (EXERCISENAME, MACHINENAME) VALUES (?,?)";
+		String preQueryStatement = "INSERT INTO exerciseonmachine (EXERCISENAME, MACHINENAME) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, exerciseName);
 		prepStat.setString(2, machineName);
@@ -64,18 +66,18 @@ public class AdminController{
 	
 	public static void insertGroupContainsExercise(Connection myConn,String groupName,String exerciseName) throws SQLException{
 		//Begge er fremmednøkkler til sin entitet
-		String preQueryStatement = "INSERT INTO GROPUCONTAINSEXERCISE (GROUPNAME, EXERCISENAME) VALUES (?,?)";
+		String preQueryStatement = "INSERT INTO groupcontainsexersice (GRUPPENAVN, EXERSICENAME) VALUES (?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
 		prepStat.setString(1, groupName);
 		prepStat.setString(2, exerciseName);
 		prepStat.execute();
 	}
 	
-	public static void insertWorkoutContainsExercise(Connection myConn,String workoutDate,String exerciseName,int antallKilo, int antallSet) throws SQLException{
+	public static void insertWorkoutContainsExercise(Connection myConn,Date workoutDate,String exerciseName,int antallKilo, int antallSet) throws SQLException{
 		//Begge er fremmednøkkler til sin entitet
-		String preQueryStatement = "INSERT INTO WORKOUTCONTAINSEXERCISE (WORKOUTDATE, EXERCISENAME, ANTALLKILO, ANTALLSET) VALUES (?,?,?,?)";
+		String preQueryStatement = "INSERT INTO workoutcontainsexercise (DATO, NAVN, KILO, SETT) VALUES (?,?,?,?)";
 		PreparedStatement prepStat = myConn.prepareStatement(preQueryStatement);
-		prepStat.setString(1, workoutDate);
+		prepStat.setDate(1, workoutDate);
 		prepStat.setString(2, exerciseName);
 		prepStat.setInt(3, antallKilo); //Hvis disse verdiene ikke er relevante settes de til null
 		prepStat.setInt(4, antallSet); //Hvis disse verdiene ikke er relevante settes de til null -  feks på øvelser som ikke er på apparat
@@ -94,12 +96,12 @@ public class AdminController{
 		List<Workout> workouts = new ArrayList<Workout>();
 		
 		//First find a list over the N last workouts
-		String stmt = "select * from Workout order by dato desc limit ?";
+		String stmt = "select * from workout order by dato desc limit ?";
 		PreparedStatement prepStat = conn.prepareStatement(stmt);
 		prepStat.setInt(1, n);
 		ResultSet rs = prepStat.executeQuery();
 		while(rs.next()) {
-			Workout w = new Workout(rs.getDate("dato"), rs.getTime("tidspunkt"), rs.getTime("varighet"), rs.getInt("personligForm"), rs.getInt("prestasjon"), rs.getString("notat"));
+			Workout w = new Workout(rs.getDate("dato"), rs.getTime("tidspunt"), rs.getInt("varighet"), rs.getInt("personligForm"), rs.getInt("prestasjon"), rs.getString("notat"));
 			workouts.add(w);
 		}
 		
@@ -113,8 +115,9 @@ public class AdminController{
 				Exercise e = new Exercise(rs.getString("exersicename"),rs.getInt("kilo"),rs.getInt("sett"));
 				
 				//Hen exercise beskrivelse
-				String tmpStmt = "Select * from Exercise where navn = ?";
+				String tmpStmt = "Select * from exercise where navn = ?";
 				PreparedStatement pr = conn.prepareStatement(tmpStmt);
+				pr.setString(1, rs.getString("exersicename"));
 				ResultSet tmpRes = pr.executeQuery();
 				e.setDescription(tmpRes.getString("beskrivelse"));
 				
@@ -124,46 +127,92 @@ public class AdminController{
 				//Legg til øvelse i workout
 				w.addExercise(e);
 			}
+			
 		}
 		return workouts;
 	}
-	
-	
-//	//FÅ ALLE FRA EN SPESIFIKK ØVELSE
-//	public static ArrayList<Exercise> getOvelseFromOkt(Connection myConn, int oktID) throws SQLException{
-//		ArrayList<Exercise> ovelseList = new ArrayList<>();
-//		String query = "SELECT * FROM EXERCISE INNER JOIN EXERCISEGROUP EXERCISE.NAVN = EXERCISEGROUP.NAVN WHERE OKTID = ?";//BURDE KANSKJE HA ID ISTEDEFOR NAVN?
-//		PreparedStatement preparedStatement = myConn.prepareStatment(query);
-//		preparedStatement.setInt(1, oktID);
-//		ResultSet resultSet = preparedStatement.executeQuery();
-//		
-//		while (resultSet.next()) {
-//			String name = resultSet.getString("NAVN");
-//			String description = resultSet.getString("BESKRIVELSE");
-//			
-//			Exercise ovelse = new Exercise(name,description); //hvordan fikser jeg dette datagutter?
-//			ovelseList.add(ovelse);
-//		}
-//		return ovelseList;
-//	}
-	
-	
-	
-	public static String getResultOvelseMachine(Connection myConn, int ID) throws SQLException{
-		String query = "SELECT * FROM MACHINE INNER JOIN ON OVELSE.NAVN = REULTATSTYRKE.NAVN";
-		PreparedStatement preparedStatement = myConn.prepareStatement(query);
-		preparedStatement.setInt(1, ID);
-		ResultSet resultSet = preparedStatement.executeQuery();
 		
-		String report = "";
+	
+	///////////////////////////Kravspesifikasjon 3///////////////////////////
+	
+	public static String getExerciseResult(Connection myConn, Date dateStart,Date dateEnd) throws SQLException{
+        String query = "SELECT PERSONLIGFORM, VARIGHET FROM workout WHERE DATO BETWEEN ? AND ?";
+        PreparedStatement preparedStatement = myConn.prepareStatement(query);
+        preparedStatement.setDate(1, dateStart);
+        preparedStatement.setDate(2, dateEnd);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int index =1;
+        int antallTimer = 0;
+        int antallPersonligeForm = 0;
+        while (resultSet.next()) {
+            
+            index++;
+            antallTimer += resultSet.getInt("VARIGHET");
+            antallPersonligeForm += resultSet.getInt("PERSONLIGFORM");
+            
+        }
+        int personligFormSnitt = antallPersonligeForm/index;
+        int varighetSnitt = antallTimer/index;
+        
+        String report = "I løpet av perioden på "+ index + "dager, trente du "+ antallTimer + "."+ " Gjennomsnittsøkten var på " +varighetSnitt +" timer, med et gjennomsnittlig perosnlig form på "+personligFormSnitt +".";
+
+        return report;
+    }
+	
+	
+	///////////////////////////Kravspesifikasjon 4///////////////////////////
+	
+	
+	public static List<ExerciseGroup> getExerciseGroups(Connection conn) throws SQLException{
+		List<ExerciseGroup> groups = new ArrayList<ExerciseGroup>();
 		
-		while (resultSet.next()) {
-			String navn = resultSet.getString("NAVN");
-			String antReps = resultSet.getString("ANTALLREPS");
-			String antSet = resultSet.getString("ANTALLSET");
-			String kg = String.valueOf(resultSet.getInt("KG"));
-			report = navn + antReps + antSet + kg; 
+		//Spørr om alle koblingene mellom en exercise og en gruppe
+		String stmt = "Select * from groupcontainsexercise";
+		PreparedStatement prepStat = conn.prepareStatement(stmt);
+		ResultSet rs = prepStat.executeQuery();
+		
+		//Lag en map hvor gruppenavn er key og ArrayList med exercisenavn er value
+		Map<String,ArrayList<String>> map = new HashMap<String,ArrayList<String>>();
+		while(rs.next()) {
+			if(map.containsKey(rs.getString("gruppenavn"))) {
+				map.get(rs.getString("gruppenavn"));
+			}
+			else {
+				map.put(rs.getString("gruppenavn"), new ArrayList<String>(Arrays.asList(rs.getString("exercisename"))));
+			}
 		}
-		return report;
+		
+		//Lag objekter ut av mappen
+		for(String gruppenavn : map.keySet()) {
+			List<Exercise> exercises = new ArrayList<Exercise>();
+			for(String exercisename : map.get(gruppenavn)) {
+				//Hen exercise beskrivelse
+				String tmpStmt = "Select * from Exercise where navn = ?";
+				PreparedStatement pr = conn.prepareStatement(tmpStmt);
+				pr.setString(1, exercisename);
+				ResultSet tmpRes = pr.executeQuery();
+				Exercise e = new Exercise(exercisename,tmpRes.getString("beskrivelse"));
+				exercises.add(e);
+			}
+			groups.add(new ExerciseGroup(gruppenavn,exercises));
+		}
+		
+		return groups;
+	
 	}
+	
+	
+	///////////////////////////Kravspesifikasjon 5///////////////////////////
+	
+	
+	//Skal hente ut hvor mange treningsøkter en har hatt totalt
+	public static int getTotalWorkouts(Connection conn) throws SQLException {
+		String stmt  = "select count(dato) as total from workout";
+		PreparedStatement pr = conn.prepareStatement(stmt);
+		ResultSet rs = pr.executeQuery();
+		return rs.next() ? rs.getInt("total") : 0;
+	}
+	
+	
+	
 }
