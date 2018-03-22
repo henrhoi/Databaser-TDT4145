@@ -134,30 +134,30 @@ public class AdminController{
 		
 	
 	///////////////////////////Kravspesifikasjon 3///////////////////////////
-	
 	public static String getExerciseResult(Connection myConn, Date dateStart,Date dateEnd) throws SQLException{
 		//TODO - BETWEEN FUNKER IKKE HER MED DATOENE...
-		String min = "'" + dateStart.getYear() + "-" + (dateStart.getMonth()+1) + "-" + dateStart.getDate() + "'";
-		String max = "'" + dateEnd.getYear() + "-" + (dateEnd.getMonth()+1) + "-" + dateEnd.getDate() + "'";
+		dateStart.setYear(dateStart.getYear()-1900);
+		dateEnd.setYear(dateEnd.getYear()-1900);
         String query = "SELECT PERSONLIGFORM, VARIGHET FROM workout WHERE DATO BETWEEN ? AND ?";
+        //SELECT PERSONLIGFORM, VARIGHET FROM workout WHERE DATO BETWEEN '3000-01-01' AND '4000-01-01'
         PreparedStatement preparedStatement = myConn.prepareStatement(query);
-        preparedStatement.setString(1, min);
-        preparedStatement.setString(2, max);
+        preparedStatement.setDate(1, dateStart);
+        preparedStatement.setDate(2, dateEnd);
+        System.out.println(preparedStatement);
         ResultSet resultSet = preparedStatement.executeQuery();
         int index =1;
-        int antallTimer = 0;
-        int antallPersonligeForm = 0;
+        double antallTimer = 0;
+        double antallPersonligeForm = 0;
         while (resultSet.next()) {
             System.out.println("INNNE I LOOPEN");
             index++;
             antallTimer += resultSet.getInt("VARIGHET");
             antallPersonligeForm += resultSet.getInt("PERSONLIGFORM");
-            
         }
-        int personligFormSnitt = antallPersonligeForm/index;
-        int varighetSnitt = antallTimer/index;
+        double personligFormSnitt = antallPersonligeForm/index;
+        double varighetSnitt = antallTimer/index;
         
-        String report = "I løpet av perioden på "+ index + "dager, trente du "+ antallTimer + "."+ " Gjennomsnittsøkten var på " +varighetSnitt +" timer, med et gjennomsnittlig perosnlig form på "+personligFormSnitt +".";
+        String report = "I løpet av perioden på "+ index + "dager, trente du "+ antallTimer + " timer."+ " Gjennomsnittsøkten var på " +varighetSnitt +" timer, med et gjennomsnittlig perosnlig form på "+personligFormSnitt +".";
 
         return report;
     }

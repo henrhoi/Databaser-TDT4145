@@ -16,10 +16,10 @@ public class Main extends DBConn{
 	
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		Connection myConn = new Main().connect();
+		Connection myConn = DBConnection.getDBConnection();
 		System.out.println("Testing");
-		Date dateStart = new Date(2017,4,4);
-		Date dateEnd = new Date(2019,4,4);
+		Date dateStart = new Date(3000,4,4);
+		Date dateEnd = new Date(4000,4,4);
 		System.out.println(dateStart.getYear());
 		
 		System.out.println(AdminController.getExerciseResult(myConn, dateStart,dateEnd));
