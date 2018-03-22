@@ -52,9 +52,8 @@ public class TrainingController{
 			int personligForm = Integer.parseInt(input.get(3));
 			int prestasjon = Integer.parseInt(input.get(4));
 			String notat = input.get(5);
-			System.out.println(input);
 			AdminController.insertWorkout(myConn, date, time, duration, personligForm, prestasjon, notat);
-			System.out.println("Workout added");
+			textArea.setText("Workout added");
 		} catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
 		}
@@ -71,7 +70,7 @@ public class TrainingController{
 			String navn = input.get(0);
 			String beskrivelse = input.get(1);
 			AdminController.insertExercise(myConn, navn, beskrivelse);
-			System.out.println("Exercise added");
+			textArea.setText("Exercise added");
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
 		}
@@ -85,7 +84,7 @@ public class TrainingController{
 			String navn = input.get(0);
 			String beskrivelse = input.get(1);
 			AdminController.insertMachine(myConn, navn, beskrivelse);
-			System.out.println("Machine added");
+			textArea.setText("Machine added");
 			
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
@@ -102,7 +101,7 @@ public class TrainingController{
 			List<String> input = Arrays.asList(registerExerciseGroupField.getText().split(","));
 			String navn = input.get(0);
 			AdminController.insertExerciseGroup(myConn, navn);
-			System.out.println("Exercise group added");
+			textArea.setText("ExerciseGroup added");
 			
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
@@ -115,12 +114,11 @@ public class TrainingController{
 	@FXML
 	public void registerExerciseInGroup() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		try {
-			System.out.println(registerExerciseInGroupField.getText());
 			List<String> input = Arrays.asList(registerExerciseInGroupField.getText().split(","));
 			String groupName = input.get(0);
 			String exerciseName = input.get(1);
 			AdminController.insertGroupContainsExercise(myConn, groupName, exerciseName);
-			System.out.println("Exercise added to exercise group.");
+			textArea.setText("Exercise added to exercise group.");
 			
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
@@ -139,13 +137,11 @@ public class TrainingController{
 			int month = Integer.parseInt(dateString.get(1));
 			int day = Integer.parseInt(dateString.get(2));
 			Date workoutDate = new Date(year - 1900, month - 1, day);
-			System.out.println(input.get(1));
 			String exerciseName = input.get(1).replaceAll("\\s", "");
 			int antallKilo = Integer.parseInt(input.get(2));
 			int antallSet = Integer.parseInt(input.get(3));
-			System.out.println(input);
 			AdminController.insertWorkoutContainsExercise(myConn, workoutDate, exerciseName, antallKilo, antallSet);
-			System.out.println("Exercise was added to this workout");
+			textArea.setText("Exercise was added to this workout");
 			
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
@@ -161,7 +157,7 @@ public class TrainingController{
 			String exerciseName = input.get(0);
 			String machineName = input.get(1);
 			AdminController.insertExerciseOnMachine(myConn, exerciseName, machineName);
-			System.out.println("Exercise was added to the machine");
+			textArea.setText("Exercise was added to the machine");
 			
 		}catch (RuntimeException e) {
 			textArea.setText("Error: Key is already taken or you wrote unvalid data");
