@@ -3,7 +3,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 
-public class Main extends DBConn{
+public class Main{
 	
 	
 	public void init() {
