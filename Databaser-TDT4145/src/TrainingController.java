@@ -21,12 +21,13 @@ public class TrainingController extends Application{
 	
 	@FXML
 	Button registerWorkoutButton, registerExerciseButton, registerMachineButton, registerExcersiceGroupButton,
-	registerExerciseInGroupButton, registerExerciseInWorkoutButton, registerExerciseOnMachineButton;
+	registerExerciseInGroupButton, registerExerciseInWorkoutButton, registerExerciseOnMachineButton,
+	getExerciseResultsButton;
 	
 	@FXML
 	TextField registerWorkoutField, registerExerciseField, registerMachineField, registerExerciseGroupField,
 	registerExerciseInGroupField,registerExerciseInWorkoutField, registerExerciseOnMachineField,
-	getNLastWorkoutsField;
+	getNLastWorkoutsField, getExerciseResultsField;
 	
 	@FXML
 	TextArea textArea;
@@ -167,7 +168,7 @@ public class TrainingController extends Application{
 			result += workout.getDato().toString() + "\t";
 			result += workout.getTidspunkt().toString() + "            ";
 			result += workout.getVarighet() + "\t\t  ";
-			result += workout.getPersonligForm() + "\t\t";
+			result += workout.getPersonligForm() + "\t\t ";
 			result += workout.getPrestasjon() + "\t\t\t";
 			result += workout.getNotat() + "\n";
 		}
@@ -182,6 +183,29 @@ public class TrainingController extends Application{
 		int totalWorkouts = AdminController.getTotalWorkouts(myConn);
 		textArea.setText(totalWorkouts + "");
 	}
+	
+	
+	public void getExerciseResult() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		Connection myConn = DBConnection.getDBConnection();
+		List<String> input = Arrays.asList(getExerciseResultsField.getText().split(","));
+		List<String> startDate = Arrays.asList(input.get(0).split("-"));
+		List<String> endDate = Arrays.asList(input.get(1).split("-"));
+		int startYear = Integer.parseInt(startDate.get(0));
+		int startMonth = Integer.parseInt(startDate.get(1));
+		int startDay = Integer.parseInt(startDate.get(2));
+		Date dateStart = new Date(startYear, startMonth, startDay);
+		int endYear = Integer.parseInt(endDate.get(0));
+		int endMonth = Integer.parseInt(endDate.get(1));
+		int endDay = Integer.parseInt(endDate.get(2));
+		Date dateEnd = new Date(endYear, endMonth, endDay);
+		
+		String result = AdminController.getExerciseResult(myConn, dateStart, dateEnd);
+		
+		textArea.setText(result);
+		
+		
+	}
+	
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
