@@ -35,8 +35,24 @@ public class Workout {
 		return dato;
 	}
 		
+	public Time getTidspunkt() {
+		return tidspunkt;
+	}
 	
+	public int getVarighet() {
+		return varighet;
+	}
 	
+	public int getPersonligForm() {
+		return personligForm;
+	}
 	
+	public int getPrestasjon() {
+		return prestasjon;
+	}
+	
+	public String getNotat() {
+		return notat;
+	}
 
 }

@@ -21,6 +21,10 @@ public class Exercise {
 		this.description = description;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public void setMachine(String machine) {
 		this.machine = machine;
 	}

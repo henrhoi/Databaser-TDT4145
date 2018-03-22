@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TrainingController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="504.0" prefWidth="884.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TrainingController">
    <children>
-      <Button fx:id="registerExerciseButton" layoutX="98.0" layoutY="79.0" mnemonicParsing="false" onAction="#registerExercise" text="Register exercise" />
-      <Button layoutX="98.0" layoutY="131.0" mnemonicParsing="false" onAction="#registerMachine" text="Register Machine" />
-      <Button layoutX="97.0" layoutY="35.0" mnemonicParsing="false" onAction="#registerWorkout" text="Register Workout" />
-      <TextField fx:id="registerExerciseField" layoutX="300.0" layoutY="79.0" promptText="(navn)" />
-      <TextField fx:id="registerMachineField" layoutX="300.0" layoutY="131.0" promptText="(navn, beskrivelse)" />
-      <TextField fx:id="registerWorkoutField" layoutX="300.0" layoutY="35.0" promptText="(dato, tidspunk, varighet, personlig form, prestajon, notat)" />
-      <Button fx:id="registerExcersiceGroupButton" layoutX="75.0" layoutY="187.0" mnemonicParsing="false" onAction="#registerExerciseGroup" text="Register excercise group" />
-      <Button fx:id="registerExerciseInWorkoutButton" layoutX="64.0" layoutY="279.0" mnemonicParsing="false" onAction="#registerExerciseInWorkout" text="Register Exercise in workout" />
-      <Button fx:id="registerExerciseInGroupButton" layoutX="71.0" layoutY="235.0" mnemonicParsing="false" onAction="#registerExerciseInGroup" text="Register Exercise in group" />
-      <TextField fx:id="registerExerciseGroupField" layoutX="300.0" layoutY="187.0" promptText="(navn)" />
-      <TextField fx:id="registerExerciseInGroupButtonregisterExerciseInGroupField" layoutX="300.0" layoutY="235.0" promptText="(gruppe, øvelsenavn)" />
-      <TextField fx:id="registerExerciseInWorkoutField" layoutX="300.0" layoutY="279.0" promptText="(dato, navn, kilo, sett)" />
-      <Button fx:id="registerExerciseOnMachineButton" layoutX="61.0" layoutY="326.0" mnemonicParsing="false" onAction="#registerExerciseOnMachine" text="Register Exercise on Machine" />
-      <TextField fx:id="registerExerciseOnMachineField" layoutX="300.0" layoutY="326.0" />
+      <Button fx:id="registerExerciseButton" layoutX="98.0" layoutY="106.0" mnemonicParsing="false" onAction="#registerExercise" text="Register exercise" />
+      <Button layoutX="98.0" layoutY="158.0" mnemonicParsing="false" onAction="#registerMachine" text="Register Machine" />
+      <Button layoutX="98.0" layoutY="49.0" mnemonicParsing="false" onAction="#registerWorkout" text="Register Workout" />
+      <TextField fx:id="registerExerciseField" layoutX="258.0" layoutY="106.0" prefHeight="27.0" prefWidth="209.0" promptText="(navn, beskrivelse)" />
+      <TextField fx:id="registerMachineField" layoutX="258.0" layoutY="158.0" prefHeight="27.0" prefWidth="209.0" promptText="(navn, beskrivelse)" />
+      <TextField fx:id="registerWorkoutField" layoutX="248.0" layoutY="49.0" prefHeight="27.0" prefWidth="229.0" promptText="(dato, tidspunk, varighet, personlig form, prestajon, notat)" />
+      <Button fx:id="registerExcersiceGroupButton" layoutX="75.0" layoutY="213.0" mnemonicParsing="false" onAction="#registerExerciseGroup" text="Register excercise group" />
+      <Button fx:id="registerExerciseInWorkoutButton" layoutX="500.0" layoutY="100.0" mnemonicParsing="false" onAction="#registerExerciseInWorkout" text="Register Exercise in workout" />
+      <Button fx:id="registerExerciseInGroupButton" layoutX="507.0" layoutY="49.0" mnemonicParsing="false" onAction="#registerExerciseInGroup" text="Register Exercise in group" />
+      <TextField fx:id="registerExerciseGroupField" layoutX="258.0" layoutY="213.0" prefHeight="27.0" prefWidth="209.0" promptText="(navn)" />
+      <TextField fx:id="registerExerciseInGroupField" layoutX="717.0" layoutY="49.0" promptText="(gruppe, øvelsenavn)" />
+      <TextField fx:id="registerExerciseInWorkoutField" layoutX="717.0" layoutY="100.0" promptText="(dato, navn, kilo, sett)" />
+      <Button fx:id="registerExerciseOnMachineButton" layoutX="497.0" layoutY="158.0" mnemonicParsing="false" onAction="#registerExerciseOnMachine" text="Register Exercise on Machine" />
+      <TextField fx:id="registerExerciseOnMachineField" layoutX="717.0" layoutY="158.0" />
+      <Button fx:id="getNLastWorkoutsButton" layoutX="101.0" layoutY="352.0" mnemonicParsing="false" onAction="#getNLastWorkouts" text="Get n last workouts" />
+      <TextField fx:id="getNLastWorkoutsField" layoutX="258.0" layoutY="352.0" promptText="How many workouts?" />
+      <TextArea fx:id="textArea" layoutX="434.0" layoutY="279.0" prefHeight="200.0" prefWidth="400.0" />
+      <Button fx:id="getExerciseGroupsButton" layoutX="98.0" layoutY="266.0" mnemonicParsing="false" onAction="#getExerciseGroups" text="Get exercise Groups" />
+      <Button fx:id="getTotalWorkoutsButton" layoutX="101.0" layoutY="305.0" mnemonicParsing="false" onAction="#getTotalWorkouts" text="Get Total Exercises" />
+      <Text layoutX="225.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="yyyy-mm-dd,hh:mm:ss,dur,perf, shape, note" />
+      <Text layoutX="258.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+      <Text layoutX="262.0" layoutY="149.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name, description" />
+      <Text layoutX="262.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name, description" />
+      <Text layoutX="717.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exercise name, machine name" />
+      <Text layoutX="726.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="date, name, kilo, sets" />
+      <Text layoutX="716.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="exercise group, exercise name" />
    </children>
 </Pane>

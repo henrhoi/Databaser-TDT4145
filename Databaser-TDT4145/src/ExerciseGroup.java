@@ -13,6 +13,10 @@ public class ExerciseGroup {
 		this.exercises = new ArrayList<Exercise>(exercises);
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public List<Exercise> getExercises() {
 		return exercises;
 	}
