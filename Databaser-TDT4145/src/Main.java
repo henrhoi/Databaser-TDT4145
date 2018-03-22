@@ -1,27 +1,23 @@
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main{
+public class Main extends Application{
 	
 	
-	public void init() {
-		
-	}
-	
-	public void run() {
-		
-	}
-	
-	
-	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		Connection myConn = DBConnection.getDBConnection();
-		System.out.println("Testing");
-		Date dateStart = new Date(3000,4,4);
-		Date dateEnd = new Date(4000,4,4);
-		System.out.println(dateStart.getYear());
-		
-		System.out.println(AdminController.getExerciseResult(myConn, dateStart,dateEnd));
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+	    		FXMLLoader loader = new FXMLLoader(getClass().getResource("FxTraining.fxml"));
+	    		Parent root = loader.load();
+	    		Scene scene = new Scene(root);
+	    		primaryStage.setScene(scene);
+	    		primaryStage.show();	
+	    }
+
+	public static void main(String[] args) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	        launch(args);
 	}
 }
