@@ -13,8 +13,9 @@ public final class DBConnection {
 	// Passord og brukernavn ligger i koden, mulig det skal gaa inn som startargs eller env. variabler
 	public static Connection getDBConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		String url = "jdbc:mysql://mysql.stud.ntnu.no/henrhoi_TDT4145?autoReconnect=true&useSSL=false";
-		String user = "henrhoi_TDT4145";
-		String pass = "MyNewPass";
+		// Spør meg om tilgang til DB
+		String user = "ASK FOR PERMISSION";
+		String pass = "ASK FOR PERMISSION";
 		
 		Properties p = new Properties();
 		p.put("user", user);
